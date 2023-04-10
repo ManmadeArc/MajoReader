@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item android:icon="@android:drawable/ic_menu_recent_history" android:id="@+id/nav_popular_manga" android:title="Recent Manga"/>
+        <item android:icon="@android:drawable/ic_search_category_default" android:id="@+id/mangaSearch" android:title="Manga Search"/>
+        <item android:icon="@android:drawable/star_off" android:id="@+id/MangaFavs" android:title="Fav Manga"/>
+        <item android:icon="@android:drawable/ic_menu_recent_history" android:id="@+id/animeRecent" android:title="Anime Recent"/>
+        <item android:icon="@android:drawable/ic_search_category_default" android:id="@+id/animeSearch" android:title="Search Anime"/>
+        <item android:icon="@android:drawable/star_off" android:id="@+id/animeFavs" android:title="Fav Anime"/>
+    </group>
+</menu>

@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Majo Reader</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="Genre">Género</string>
+    <string name="Search">....</string>
+    <string name="Synopsis">Sinopsis</string>
+
+    <string name="fav">Add to Favorites</string>
+    <string name="menu_manga_recent">Recent Manga</string>
+    <string name="nxtBtn">Siguiente</string>
+    <string name="prevBtn">anterior</string>
+    <string name="readButton">Start</string>
+    <string name="rem_fav">Remove from Favorites</string>
+    <string name="resumeButton">Resume</string>
+    <string name="textview">TextView</string>
+    <string name="image">IMAGE</string>
+</resources>
