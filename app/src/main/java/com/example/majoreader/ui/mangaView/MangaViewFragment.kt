@@ -7,6 +7,7 @@ import com.example.majoreader.DataBase
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,8 +43,10 @@ class MangaViewFragment : Fragment() {
         GlobalScope.launch(Dispatchers.IO) {
                 var scrapper = activity.mangaScrapper
                 data = scrapper.getLatestPopular()!!
+                Log.i("INFO",data.size.toString())
                 activity.runOnUiThread{
-                    var adapter = recyclerView!!.adapter
+                    var adapter = recyclerView!!.adapter as MangaAdapter
+                    adapter.setMangasList(data)
                     adapter!!.notifyDataSetChanged()
                 }
             }
@@ -63,9 +66,9 @@ class MangaViewFragment : Fragment() {
         recyclerView!!.itemAnimator = DefaultItemAnimator()
         recyclerView!!.layoutManager = layoutManager
         activity = requireActivity() as MainActivity
-        val arrayList: ArrayList<MangaData> = data
+
         val dataBase = dm
-        val mangaAdapter = MangaAdapter(activity,dataBase,arrayList,false )
+        val mangaAdapter = MangaAdapter(activity,dataBase,data,false )
         recyclerView!!.adapter = mangaAdapter
         refresh = root.findViewById<View>(R.id.refresh) as SwipeRefreshLayout
         refresh!!.setProgressBackgroundColorSchemeColor( ContextCompat.getColor(

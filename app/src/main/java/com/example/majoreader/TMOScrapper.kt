@@ -68,7 +68,7 @@ class TMOScrapper {
                     Regex("https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)")
 
                 val doc2 = doc
-                val poster = regex.find(text).toString()
+                val poster = regex.find(text)!!.value
                 var attr2 = element.select("a").attr("href")
 
                 val id = attr2
@@ -102,6 +102,7 @@ class TMOScrapper {
         val poster =
             doc.select("#app > section > header > section.element-header-content > div.container.h-100 > div > div.col-12.col-md-3.text-center > div > img")
                 .attr("src")
+        Log.i("INFOQ",poster.toString())
         val title =
             doc.select("#app > section > header > section.element-header-content > div.container.h-100 > div > div.col-12.col-md-9.element-header-content-text > h2")
                 .text()

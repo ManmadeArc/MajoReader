@@ -2,6 +2,9 @@ package com.example.majoreader.ui.mangaVertical
 
 
 import android.graphics.Bitmap
+import android.os.Handler
+import android.os.Looper
+import android.provider.Settings.Global
 
 import com.example.majoreader.MainActivity
 import com.example.majoreader.ImageData
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 
 import android.widget.ImageView
@@ -32,9 +36,12 @@ class VerticalChapterAdapter(
     var imageList: ImageData,
     var buttons: TableLayout,
 ) : RecyclerView.Adapter<VerticalChapterAdapter.ListItemHolder>() {
+
+    private val handler = Handler(Looper.getMainLooper())
     inner class ListItemHolder(view: View) :
         RecyclerView.ViewHolder(view), View.OnClickListener {
         var imageView: ImageView
+        var overidedSizes = false
         override fun onClick(p0: View) {
             if (buttons.visibility == View.VISIBLE) {
                 buttons.visibility = View.INVISIBLE
@@ -57,18 +64,19 @@ class VerticalChapterAdapter(
     }
 
     override fun onBindViewHolder(holder: ListItemHolder, position: Int) {
-
+        Log.i("IS VIEW EXISTENT?" , (holder.imageView!=null).toString())
         var data: String? = imageList.images[position]
         val displayMetrics = DisplayMetrics()
         val windowManager = mainActivity.windowManager
         windowManager.defaultDisplay.getMetrics(displayMetrics)
+        Log.i("REFERER",imageList.referer)
         holder.setIsRecyclable(false)
         Glide.with(holder.imageView.context)
             .asBitmap()
             .load(GlideUrl(data, LazyHeaders.Builder().addHeader("referer", imageList.referer).build() as Headers))
-            .placeholder(R.drawable.loading)
-            .thumbnail(0.25f)
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .placeholder(R.drawable.loading).dontAnimate()
+            .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).centerInside()
             .listener(object : RequestListener<Bitmap> {
                 override fun onResourceReady(
                     resource: Bitmap?,
@@ -77,15 +85,22 @@ class VerticalChapterAdapter(
                     dataSource: DataSource?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    resource?.let {
-                        val aspectRatio = it.width.toFloat() / it.height.toFloat()
+//
+                        holder.imageView.scaleType= ImageView.ScaleType.FIT_START
+                        val aspectRatio = resource!!.width.toFloat() / resource.height.toFloat()
                         val width = holder.imageView.context.resources.displayMetrics.widthPixels
                         holder.imageView.layoutParams.width = width
                         holder.imageView.layoutParams.height = (width / aspectRatio).toInt()
-                        Glide.with(holder.imageView).clear(holder.imageView)
-                        Glide.with(holder.imageView).load(it).into(holder.imageView)
-                    }
-                    return true
+
+
+//                    handler.post{
+//                            Glide.with(holder.imageView.context).clear(holder.imageView)
+//                            Glide.with(holder.imageView.context).load(resource).into(holder.imageView)
+//                        }
+//                    }
+
+
+                    return false
                 }
 
                 override fun onLoadFailed(
@@ -93,7 +108,9 @@ class VerticalChapterAdapter(
                     model: Any?,
                     target: Target<Bitmap>?,
                     isFirstResource: Boolean
-                ): Boolean = false
+                ): Boolean {
+                    return false
+                }
             })
             .into(holder.imageView)
     }

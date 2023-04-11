@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Intrinsics.checkNotNullExpressionValue(fragment, "supportFragmentManager")
         fragment.beginTransaction().add(
             R.id.fragmentHolder,
-            (AnimeFragment() as Fragment?)!!
+            (MangaViewFragment() as Fragment?)!!
         ).commit()
     }
 

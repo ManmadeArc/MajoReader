@@ -1,9 +1,11 @@
 package com.example.majoreader.ui.mangaChapters
+import android.net.Uri
 import androidx.lifecycle.lifecycleScope
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.LinearLayout
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +51,11 @@ class ChapterFragment : Fragment() {
             var scrapper = activity.mangaScrapper
             data = scrapper.getEpisodeList(input)!!
             (recyclerView!!.adapter as MangaChaptersAdapter).mangasData = data.epiList
+            activity.runOnUiThread{
+                loadImage()
+                (recyclerView!!.adapter as MangaChaptersAdapter).notifyDataSetChanged()
+            }
+
         }
 
     }
@@ -111,19 +118,24 @@ class ChapterFragment : Fragment() {
             view.visibility = View.INVISIBLE
         }
 
-        genre?.text = "TBD"
-        synop?.text = data.synopsis
-        title?.text = data.title
 
-        Glide.with(image!!)
-            .load(data.imageUrl)
-            .into(image!!)
+        Log.i("AAAAAA",data.imageUrl)
+
 
         recyclerView?.itemAnimator = DefaultItemAnimator()
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = MangaChaptersAdapter(activity, data.epiList, input!!)
 
         return root
+    }
+
+    fun loadImage(){
+        genre?.text = "TBD"
+        synop?.text = data.synopsis
+        title?.text = data.title
+        Glide.with(image!!)
+            .load(Uri.parse(data.imageUrl))
+            .into(image!!)
     }
 
 

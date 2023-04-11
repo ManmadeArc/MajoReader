@@ -2,6 +2,7 @@ package com.example.majoreader.ui.mangaView
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,10 +45,9 @@ class MangaAdapter(
 
         mangaData = mangaData
         holder.title?.text = mangaData.title
-        val with: RequestManager = Glide.with(holder.itemView)
         val parse = Uri.parse(mangaData.imageUrl)
-
-        holder.imageView?.let { with.load(parse).into(it) }
+        Log.i("INFO",mangaData.imageUrl)
+        Glide.with(mainActivity).load(parse).into(holder.imageView!!)
         holder.genre?.text = mangaData.genre
         holder.data = (mangaData.id)
         if (dm.itsIn(mangaData)) {
