@@ -36,7 +36,7 @@ class ChapterFragment : Fragment() {
     private var synop: TextView? = null
     private var title: TextView? = null
     private lateinit var view: LinearLayout
-
+    private var root:View?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity =  requireActivity() as MainActivity
@@ -65,13 +65,14 @@ class ChapterFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.manga_chapters, container, false)
-        recyclerView = root.findViewById(R.id.chapterList)
-        image = root.findViewById(R.id.bannerA)
-        synop = root.findViewById(R.id.synopsisPlaceHolder)
-        genre = root.findViewById(R.id.genrePlaceHolder)
-        title = root.findViewById(R.id.titlePlaceHolder)
-        readBtn = root.findViewById(R.id.readBtn)
+        if(root!=null) return root
+        root = inflater.inflate(R.layout.manga_chapters, container, false)
+        recyclerView = root!!.findViewById(R.id.chapterList)
+        image = root!!.findViewById(R.id.bannerA)
+        synop = root!!.findViewById(R.id.synopsisPlaceHolder)
+        genre = root!!.findViewById(R.id.genrePlaceHolder)
+        title = root!!.findViewById(R.id.titlePlaceHolder)
+        readBtn = root!!.findViewById(R.id.readBtn)
         val fr = activity.supportFragmentManager.beginTransaction()
         val bundle = Bundle()
 
@@ -111,7 +112,7 @@ class ChapterFragment : Fragment() {
             }
         }
 
-        view = root.findViewById(R.id.container)
+        view = root!!.findViewById(R.id.container)
         if (data.title.isNullOrBlank()) {
             view.visibility = View.VISIBLE
         } else {

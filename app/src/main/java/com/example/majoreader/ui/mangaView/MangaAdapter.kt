@@ -107,6 +107,12 @@ class MangaAdapter(
         MangaList = MangaLists
     }
 
+    fun addMangasList(newData: List<MangaData>) {
+        val startIndex = MangaList.size // get the index where the new data will be added
+        MangaList.addAll(newData) // add the new data to the existing list
+        notifyItemRangeInserted(startIndex, newData.size) // notify the adapter that new data has been added
+    }
+
 
     inner class ListItemHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {

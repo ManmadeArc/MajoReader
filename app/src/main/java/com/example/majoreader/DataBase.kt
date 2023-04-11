@@ -140,17 +140,22 @@ class DataBase(context: Context?) {
         return db.rawQuery(query, null)
     }
 
-    fun selectAll(boolean_: Boolean): Cursor {
+    fun selectAll(boolean_: Boolean, pageSize: Int=0, page: Int=0): Cursor {
         var string = Table_A_FAV
         if (boolean_) {
             string = Table_M_FAV
         }
         val sQLiteDatabase = db
-        var stringBuilder = ""
-        stringBuilder += "SELECT * from "
-        stringBuilder += string
-        stringBuilder += " ORDER BY "
-        stringBuilder += TABLE_ROW_NAME
+        val offset = page * pageSize
+        val stringBuilder = StringBuilder()
+        stringBuilder.append("SELECT * FROM ")
+        stringBuilder.append(string)
+        stringBuilder.append(" ORDER BY ")
+        stringBuilder.append(TABLE_ROW_NAME)
+        stringBuilder.append(" LIMIT ")
+        stringBuilder.append(pageSize)
+        stringBuilder.append(" OFFSET ")
+        stringBuilder.append(offset)
 
         return sQLiteDatabase.rawQuery(stringBuilder.toString(), null)
     }
