@@ -6,7 +6,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="5dp">
 
             <ImageView
@@ -26,6 +26,13 @@
                 android:layout_width="210dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:padding="2dp"
+                android:paddingStart="2dp"
+                android:paddingLeft="2dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="2dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="2dp"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -38,6 +45,13 @@
                 android:layout_width="87dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
+                android:padding="2dp"
+                android:paddingStart="2dp"
+                android:paddingLeft="2dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="2dp"
+                android:paddingRight="2dp"
+                android:paddingBottom="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.163"
                 app:layout_constraintStart_toEndOf="@+id/poster"
@@ -47,6 +61,10 @@
                 android:id="@+id/btnAFav"
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:paddingTop="4dp"
+                android:paddingRight="4dp"
+                android:paddingBottom="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/poster"

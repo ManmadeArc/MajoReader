@@ -14,11 +14,16 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.majoreader.DataBase
 import com.example.majoreader.MainActivity
 import com.example.majoreader.MangaData
 import com.example.majoreader.R
 import com.example.majoreader.ui.mangaChapters.ChapterFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.NullPointerException
 import java.util.ArrayList
 import kotlin.jvm.internal.Intrinsics
@@ -46,15 +51,34 @@ class MangaAdapter(
         mangaData = mangaData
         holder.title?.text = mangaData.title
         val parse = Uri.parse(mangaData.imageUrl)
-        Log.i("INFO",mangaData.imageUrl)
-        Glide.with(mainActivity).load(parse).into(holder.imageView!!)
+        holder.imageView?.setImageResource(R.drawable.ic_menu_camera)
         holder.genre?.text = mangaData.genre
         holder.data = (mangaData.id)
-        if (dm.itsIn(mangaData)) {
-            holder.btn?.text = mainActivity.resources.getString(R.string.rem_fav)
-        } else {
-            holder.btn?.text = mainActivity.resources.getString(R.string.fav)
+        CoroutineScope(Dispatchers.IO).launch{
+            var itsInDb = dm.itsIn(mangaData)
+
+            withContext(Dispatchers.Main){
+                if (itsInDb) {
+                    holder.btn?.text = mainActivity.resources.getString(R.string.rem_fav)
+                } else {
+                    holder.btn?.text = mainActivity.resources.getString(R.string.fav)
+                }
+            }
+
         }
+
+        CoroutineScope(Dispatchers.IO).launch{
+            val bitmap = Glide.with(holder.imageView!!)
+                .asBitmap().diskCacheStrategy(DiskCacheStrategy.DATA)
+                .load(mangaData.imageUrl)
+                .submit()
+                .get()
+
+            withContext(Dispatchers.Main){
+                holder.imageView?.setImageBitmap(bitmap) // Update the ImageView with the loaded image
+            }
+        }
+
         holder.btn?.setOnClickListener {
             if (holder.btn!!.text == mainActivity.resources.getString(R.string.fav)) {
                 holder.btn?.text = mainActivity.resources.getString(R.string.rem_fav)
@@ -62,12 +86,12 @@ class MangaAdapter(
             } else {
                 holder.btn?.text = mainActivity.resources.getString(R.string.fav)
                 dm.delete(mangaData)
-
+                if (favPage) {
+                    this.notifyDataSetChanged()
+                }
             }
         }
-        if (favPage) {
-            this.notifyDataSetChanged()
-        }
+
     }
 
     override fun getItemCount(): Int {

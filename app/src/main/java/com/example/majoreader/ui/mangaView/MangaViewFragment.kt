@@ -33,21 +33,22 @@ class MangaViewFragment : Fragment() {
     private lateinit var dm: DataBase
     private var recyclerView: RecyclerView? = null
     private var refresh: SwipeRefreshLayout? = null
-
+    private val layoutManager = LinearLayoutManager(context)
+    private lateinit var mangaAdapter : MangaAdapter
+    private  var root: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val arguments = arguments
         activity = (requireActivity() as? MainActivity)!!
         dm = DataBase(activity)
+        mangaAdapter = MangaAdapter(activity,dm,data,false )
         GlobalScope.launch(Dispatchers.IO) {
                 var scrapper = activity.mangaScrapper
                 data = scrapper.getLatestPopular()!!
                 Log.i("INFO",data.size.toString())
                 activity.runOnUiThread{
-                    var adapter = recyclerView!!.adapter as MangaAdapter
-                    adapter.setMangasList(data)
-                    adapter!!.notifyDataSetChanged()
+                    mangaAdapter.setMangasList(data)
+                    mangaAdapter!!.notifyDataSetChanged()
                 }
             }
         }
@@ -59,33 +60,34 @@ class MangaViewFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val layoutInflater: LayoutInflater = inflater
-        val root: View = layoutInflater.inflate(R.layout.manga_popular, container, false)
-        recyclerView = root.findViewById<View>(R.id.popularRecyler) as RecyclerView
-        val layoutManager = LinearLayoutManager(context)
-        recyclerView!!.itemAnimator = DefaultItemAnimator()
-        recyclerView!!.layoutManager = layoutManager
-        activity = requireActivity() as MainActivity
+        if(root==null){
+            val layoutInflater: LayoutInflater = inflater
+            root= layoutInflater.inflate(R.layout.manga_popular, container, false)
+            recyclerView = root!!.findViewById<View>(R.id.popularRecyler) as RecyclerView
+            recyclerView!!.itemAnimator = DefaultItemAnimator()
+            if(recyclerView!!.layoutManager==null){
+                recyclerView!!.layoutManager = layoutManager
+            }
+            activity = requireActivity() as MainActivity
+            recyclerView!!.adapter = mangaAdapter
+            refresh = root!!.findViewById<View>(R.id.refresh) as SwipeRefreshLayout
+            refresh!!.setProgressBackgroundColorSchemeColor( ContextCompat.getColor(
+                activity.applicationContext, R.color.purple_500))
+            refresh!!.setColorSchemeColors(-1)
 
-        val dataBase = dm
-        val mangaAdapter = MangaAdapter(activity,dataBase,data,false )
-        recyclerView!!.adapter = mangaAdapter
-        refresh = root.findViewById<View>(R.id.refresh) as SwipeRefreshLayout
-        refresh!!.setProgressBackgroundColorSchemeColor( ContextCompat.getColor(
-                                                activity.applicationContext, R.color.purple_500))
-        refresh!!.setColorSchemeColors(-1)
-        refresh!!.isRefreshing = false
 
-        refresh!!.setOnRefreshListener{
-            GlobalScope.launch(Dispatchers.IO) {
-                var scrapper = activity.mangaScrapper
-                data = scrapper.getLatestPopular()!!
-                activity.runOnUiThread{
-                    var adapter = recyclerView!!.adapter
-                    adapter!!.notifyDataSetChanged()
+            refresh!!.setOnRefreshListener{
+                GlobalScope.launch(Dispatchers.IO) {
+                    var scrapper = activity.mangaScrapper
+                    data = scrapper.getLatestPopular()!!
+                    activity.runOnUiThread{
+                        mangaAdapter!!.notifyDataSetChanged()
+                        refresh!!.isRefreshing = false
+                    }
                 }
             }
         }
+
 
         return root
         }

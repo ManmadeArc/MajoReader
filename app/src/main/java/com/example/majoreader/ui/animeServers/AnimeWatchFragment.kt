@@ -1,16 +1,19 @@
 package com.example.majoreader.ui.animeServers
 
 
+import android.content.Intent
 import android.graphics.Point
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.webkit.*
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.example.majoreader.MainActivity
 import com.example.majoreader.R
-
 import im.delight.android.webview.AdvancedWebView
 
 class AnimeWatchFragment : Fragment() {
@@ -35,6 +38,7 @@ class AnimeWatchFragment : Fragment() {
             callback!!.onCustomViewHidden()
             mCustomViewCallback = null
         }
+
         override fun onShowCustomView(view: View, callback: CustomViewCallback) {
             if (mCustomView != null) {
                 onHideCustomView()
@@ -54,7 +58,7 @@ class AnimeWatchFragment : Fragment() {
 
     private fun pixelToDp(pixel: Int): Int {
         val metrics = resources.displayMetrics
-        return (pixel.toFloat() / metrics.density) as Int
+        return (pixel.toFloat() / metrics.density).toInt()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +76,8 @@ class AnimeWatchFragment : Fragment() {
         videoPlayer = root.findViewById(R.id.iframe) as AdvancedWebView
 
         videoPlayer!!.webChromeClient = ChromeClient()
-        val DesktopAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36"
+        val DesktopAgent =
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36"
         videoPlayer!!.settings.apply {
             javaScriptEnabled = true
             pluginState = WebSettings.PluginState.ON
@@ -85,44 +90,47 @@ class AnimeWatchFragment : Fragment() {
             allowUniversalAccessFromFileURLs = true
         }
 
+        videoPlayer!!.settings.setRenderPriority(WebSettings.RenderPriority.HIGH)
+        videoPlayer!!.settings.allowFileAccess = true
 
+//        dataLoad = "<iframe target=\"_top\" src =\" $source\" width =\" ${pixelToDp(width - 20)}\" height =\" ${pixelToDp(height / 2)}\" allowFullScreen></iframe>"
+//        (videoPlayer!! as AdvancedWebView).loadHtml(dataLoad, "text/html", "utf-8")
         videoPlayer?.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                return true
-            }
-
-            override fun onPageFinished(view: WebView?, url: String?) {
-                if (savedInstanceState == null) {
-                    videoPlayer?.post {
-                        val width = if (Build.VERSION.SDK_INT >= 13) {
-                            val size = Point()
-                            activity?.windowManager?.defaultDisplay?.getSize(size)
-                            size.x
-                        } else {
-                            activity?.windowManager?.defaultDisplay?.width ?: 0
-                        }
-                        val height = if (Build.VERSION.SDK_INT >= 13) {
-                            val size = Point()
-                            activity?.windowManager?.defaultDisplay?.getSize(size)
-                            size.y
-                        } else {
-                            activity?.windowManager?.defaultDisplay?.height ?: 0
-                        }
-                        val params = videoPlayer!!.layoutParams
-                        params.width = width
-                        params.height = height
-                        videoPlayer!!.layoutParams = params
-                        dataLoad = "<iframe target=\"_top\" src =\" $source\" width =\" ${pixelToDp(width - 20)}\" height =\" ${pixelToDp(height / 2)}\" allowFullScreen></iframe>"
-                        (videoPlayer!! as AdvancedWebView).loadHtml(dataLoad, "text/html", "utf-8")
-                    }
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                if (url != null && url.startsWith("http")) {
+                    return Uri.parse(url).host != "example.com"
                 }
+                return false
             }
+
         }
-
-
-
         activity = requireActivity() as MainActivity
         activity?.window?.setFlags(1024, 1024)
+        val width = if (Build.VERSION.SDK_INT >= 13) {
+            val size = Point()
+            activity?.windowManager?.defaultDisplay?.getSize(size)
+            size.x
+        } else {
+            activity?.windowManager?.defaultDisplay?.width ?: 0
+        }
+        val height = if (Build.VERSION.SDK_INT >= 13) {
+            val size = Point()
+            activity?.windowManager?.defaultDisplay?.getSize(size)
+            size.y
+        } else {
+            activity?.windowManager?.defaultDisplay?.height ?: 0
+        }
+        val params = videoPlayer!!.layoutParams
+        params.width = width
+        params.height = height
+        videoPlayer!!.layoutParams = params
+
+        dataLoad =
+            "<iframe target=\"_top\" src =\" $source\" width =\" ${pixelToDp(width - 40)}\" height =\" ${
+                pixelToDp(height / 2)
+            }\" allowFullScreen></iframe>"
+        (videoPlayer!! as AdvancedWebView).loadHtml(dataLoad, "text/html", "utf-8")
+
 
         return root
     }

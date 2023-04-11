@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.majoreader.Server
 import java.util.ArrayList
-import kotlin.jvm.internal.Intrinsics
 
 class AnimePageAdapter(var myContext: Context, var fm: FragmentActivity, var Servers: ArrayList<Server>) :
     FragmentStateAdapter(fm) {

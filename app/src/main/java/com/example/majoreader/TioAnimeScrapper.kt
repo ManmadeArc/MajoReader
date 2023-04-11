@@ -1,5 +1,6 @@
 package com.example.majoreader
 
+import android.util.Log
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Document
@@ -68,25 +69,21 @@ class TioAnimeScrapper {
                 break
             }
         }
-        val matches = Regex("\"(.*?)\"").findAll(query,0).toList()
-        val step = (0 until matches.count() step 2)
-        var i = step.first
-        val last = step.last
-        val step2 = step.step
-        if (if (step2 < 0) i < last else i > last) {
-            while (true) {
+        val matches = Regex("\"(.*?)\"").findAll(query).toList().map { it.value }
+        Log.i("TEXT",query)
+        Log.i("QTY",matches.size.toString())
+
+        for (i in matches.indices step 2){
+
                 var str2 = "\""
                 val str3 = ""
-                val str1 = Regex(str2).replace(matches[i].value, str3)
-                element = Regex(str2).replace(matches[i+1].value, str3)
+                val str1 = Regex(str2).replace(matches[i], str3)
+                element = Regex(str2).replace(matches[i+1], str3)
                 val regex2 = Regex("\\\\")
                 element = regex2.replace(element, str3)
+                Log.i("DATA", "$str1 - $element")
                 servers.add(Server(str1, element))
-                if (i == last) {
-                    break
-                }
-                i += step2
-            }
+
         }
         return servers
     }
@@ -150,11 +147,12 @@ class TioAnimeScrapper {
 
         for (i in episodes) {
             val value = i.value
-            val episodeUrl = "/ver/$element-$value"
+            Log.i("ELEMENT",element.split(",")[1])
+            val episodeUrl = "/ver/${element.split(",")[1]}-$value"
             episodeList.add(Pair<String,String>(value,episodeUrl))
             str = id
         }
-        return AnimeEpisodes(title, synopsis, episodeList, image)
+        return AnimeEpisodes(title, synopsis, episodeList, BaseSite+image)
     }
 
     companion object {

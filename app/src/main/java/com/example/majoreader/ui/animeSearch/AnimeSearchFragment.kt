@@ -42,7 +42,7 @@ class AnimeSearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.search_manga, container, false).apply {
-            val recyclerView = findViewById<RecyclerView>(R.id.results)
+            recyclerView = findViewById<RecyclerView>(R.id.results)
             val text = findViewById<EditText>(R.id.searchQuery)
             val search = findViewById<ImageButton>(R.id.searchBtn)
             recyclerView?.itemAnimator = DefaultItemAnimator()

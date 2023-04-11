@@ -53,11 +53,9 @@ class VerticalReaderFragment : Fragment() {
         val root = inflater.inflate(R.layout.chapter_vertical, container, false)
         recyclerView = root.findViewById<View>(R.id.imagesHolder) as RecyclerView
         recyclerView!!.setItemViewCacheSize(10)
-        recyclerView!!.preserveFocusAfterLayout = true
-        recyclerView!!.hasFixedSize()
         recyclerView?.itemAnimator = DefaultItemAnimator()
         recyclerView?.layoutManager = LinearLayoutManager(context)
-        recyclerView?.layoutManager.offsc
+
 
         val buttons = root.findViewById<TableLayout>(R.id.chapterManager)
         val mainActivity = activity

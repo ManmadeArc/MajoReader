@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.widget.TextView
 import android.widget.LinearLayout
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,7 @@ class chaptersFragment : Fragment() {
 
         var string= arguments?.getString("id")
         activity = requireActivity() as MainActivity
+        data = AnimeEpisodes()
         scrap = activity.animeScrapper
         lifecycleScope.async(IO) {
             data  = scrap.getAnimeEpiList(string)
@@ -53,6 +55,7 @@ class chaptersFragment : Fragment() {
                 view.visibility = View.VISIBLE
                 title.text = data.title
                 syn.text = data.synopsis
+                Log.i("IMAGE",data.image.toString())
                 Glide.with(activity).load(Uri.parse(data.image)).into(image)
                 image.scaleType = ScaleType.CENTER_CROP
             }

@@ -1,11 +1,14 @@
 package com.example.majoreader
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -41,11 +44,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             this
         )
         val fragment = supportFragmentManager
-        Intrinsics.checkNotNullExpressionValue(fragment, "supportFragmentManager")
-        fragment.beginTransaction().add(
+        fragment.beginTransaction().replace(
             R.id.fragmentHolder,
             (MangaViewFragment() as Fragment?)!!
-        ).commit()
+        ).addToBackStack(null).commit()
+
+
     }
 
     override fun onBackPressed() {

@@ -70,13 +70,13 @@ class VerticalChapterAdapter(
         val windowManager = mainActivity.windowManager
         windowManager.defaultDisplay.getMetrics(displayMetrics)
         Log.i("REFERER",imageList.referer)
-        holder.setIsRecyclable(false)
         Glide.with(holder.imageView.context)
             .asBitmap()
             .load(GlideUrl(data, LazyHeaders.Builder().addHeader("referer", imageList.referer).build() as Headers))
-            .placeholder(R.drawable.loading).dontAnimate()
+            .override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL)
+            .placeholder(R.drawable.loading)
             .diskCacheStrategy(DiskCacheStrategy.ALL).skipMemoryCache(false)
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).centerInside()
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
             .listener(object : RequestListener<Bitmap> {
                 override fun onResourceReady(
                     resource: Bitmap?,

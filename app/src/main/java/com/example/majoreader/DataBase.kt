@@ -147,13 +147,12 @@ class DataBase(context: Context?) {
         }
         val sQLiteDatabase = db
         var stringBuilder = ""
-        stringBuilder+="SELECT * from "
-        stringBuilder+=string
-        stringBuilder+=" ORDER BY "
-        stringBuilder+=TABLE_ROW_NAME
-        val rawQuery = sQLiteDatabase.rawQuery(stringBuilder.toString(), null)
+        stringBuilder += "SELECT * from "
+        stringBuilder += string
+        stringBuilder += " ORDER BY "
+        stringBuilder += TABLE_ROW_NAME
 
-        return rawQuery
+        return sQLiteDatabase.rawQuery(stringBuilder.toString(), null)
     }
 
     fun itsIn(data: MangaData): Boolean {
@@ -162,8 +161,10 @@ class DataBase(context: Context?) {
         query+=" SELECT * from manga_favorite WHERE link= \""
         query+=data.id
         query+="\";"
-        val result = db.rawQuery(query, null)
-        return result.count > 0
+        val cursor = db.rawQuery(query, null)
+        val result = cursor.count
+        cursor.close()
+        return result > 0
     }
 
     fun itsIn(data: SearchQuery): Boolean {
