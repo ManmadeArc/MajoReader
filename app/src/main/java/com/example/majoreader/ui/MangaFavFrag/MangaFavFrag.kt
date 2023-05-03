@@ -38,7 +38,7 @@ class MangaFavFrag : Fragment() {
     private var isLoading = false
     private var isLastPage = false
     private var currentPage = 0
-    private var itemsPerPage = 20
+    private var itemsPerPage = 10
     private var root:View? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {

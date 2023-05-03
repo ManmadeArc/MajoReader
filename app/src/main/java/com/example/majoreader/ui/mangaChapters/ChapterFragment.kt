@@ -73,7 +73,7 @@ class ChapterFragment : Fragment() {
         genre = root!!.findViewById(R.id.genrePlaceHolder)
         title = root!!.findViewById(R.id.titlePlaceHolder)
         readBtn = root!!.findViewById(R.id.readBtn)
-        val fr = activity.supportFragmentManager.beginTransaction()
+
         val bundle = Bundle()
 
         if (inDataBase) {
@@ -91,6 +91,7 @@ class ChapterFragment : Fragment() {
             datas.close()
 
             readBtn?.setOnClickListener{
+                val fr = activity.supportFragmentManager.beginTransaction()
                 bundle.putString(
                     "url",
                     (data.epiList[data.epiList.lastIndex - lastChapter]).link
@@ -103,6 +104,7 @@ class ChapterFragment : Fragment() {
             }
         } else {
             readBtn?.setOnClickListener{
+                val fr = activity.supportFragmentManager.beginTransaction()
                 bundle.putString("url", data.epiList[0].link)
                 bundle.putInt("index", 0)
                 bundle.putString(DataBase.TABLE_ROW_LINK, input)
